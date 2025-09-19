@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { PLAN_DATA, PLAN_OPTIONS } from './constants';
 import { PlanKey, FamilyTypeKey, AgeRangeKey, Result } from './types';
@@ -69,7 +70,9 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, showResult, forma
             <h3 className="text-lg font-semibold text-gray-800 mb-2">Resultado de la Cotización</h3>
             
             {result.planValue !== undefined && (
-                <p className="text-gray-600">Valor del plan: <span className="font-bold">{formatCurrency(result.planValue)}</span></p>
+                <p className="text-gray-600">
+                    {result.discountApplied ? 'Valor del plan (25% DTO aplicado):' : 'Valor del plan:'} <span className="font-bold">{formatCurrency(result.planValue)}</span>
+                </p>
             )}
 
             <div className="mt-4 text-center">
@@ -92,6 +95,7 @@ const App: React.FC = () => {
     const [aporteTotal, setAporteTotal] = useState<number>(0);
     const [age, setAge] = useState<string>('');
     const [selectedPlan, setSelectedPlan] = useState<PlanKey>('200');
+    const [applyDiscount, setApplyDiscount] = useState<boolean>(false);
     const [result, setResult] = useState<Result>({ message: 'Ingrese los datos para cotizar', amount: null });
     const [showResult, setShowResult] = useState<boolean>(false);
 
@@ -195,14 +199,19 @@ const App: React.FC = () => {
             return;
         }
 
-        if (aporteTotal >= planValue) {
-            setResult({ message: 'INGRESA SOLO CON APORTES', amount: null, planValue });
+        let finalPlanValue = planValue;
+        if (applyDiscount) {
+            finalPlanValue = planValue * 0.75;
+        }
+
+        if (aporteTotal >= finalPlanValue) {
+            setResult({ message: 'INGRESA SOLO CON APORTES', amount: null, planValue: finalPlanValue, discountApplied: applyDiscount });
         } else {
-            const difference = planValue - aporteTotal;
-            setResult({ message: 'A PAGAR:', amount: difference, planValue });
+            const difference = finalPlanValue - aporteTotal;
+            setResult({ message: 'A PAGAR:', amount: difference, planValue: finalPlanValue, discountApplied: applyDiscount });
         }
         setShowResult(true);
-    }, [aportes, age, aporteTotal, selectedPlan]);
+    }, [aportes, age, aporteTotal, selectedPlan, applyDiscount]);
     
     const handleNumericInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
@@ -252,7 +261,11 @@ const App: React.FC = () => {
                                 label="Plan"
                                 value={selectedPlan}
                                 onChange={(e) => {
-                                    setSelectedPlan(e.target.value as PlanKey);
+                                    const newPlan = e.target.value as PlanKey;
+                                    setSelectedPlan(newPlan);
+                                    if (newPlan === 'POR_APORTES') {
+                                        setApplyDiscount(false);
+                                    }
                                     setShowResult(false);
                                 }}
                                 options={PLAN_OPTIONS}
@@ -273,6 +286,25 @@ const App: React.FC = () => {
                                 </p>
                             </div>
                         )}
+
+                        <div className="flex items-center justify-start">
+                             <input
+                                id="discount-checkbox"
+                                type="checkbox"
+                                checked={applyDiscount}
+                                onChange={(e) => {
+                                    setApplyDiscount(e.target.checked);
+                                    setShowResult(false);
+                                }}
+                                className="h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={selectedPlan === 'POR_APORTES'}
+                                aria-disabled={selectedPlan === 'POR_APORTES'}
+                             />
+                             <label htmlFor="discount-checkbox" className="ml-3 block text-sm font-medium text-gray-700 select-none">
+                                 APLICAR DESCUENTO DEL 25%
+                             </label>
+                         </div>
+
 
                         <button
                             onClick={calculateQuote}

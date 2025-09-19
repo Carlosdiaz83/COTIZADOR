@@ -28,4 +28,5 @@ export interface Result {
     message: string;
     amount: number | null;
     planValue?: number;
+    discountApplied?: boolean;
 }
