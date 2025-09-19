@@ -1,0 +1,5 @@
+{
+  "name": "Cotizador de Planes",
+  "description": "Una aplicación para cotizar planes de salud de medicina prepaga basados en aportes, edad y tipo de plan familiar.",
+  "requestFramePermissions": []
+}
