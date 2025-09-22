@@ -215,18 +215,16 @@ const App: React.FC = () => {
     
     const handleNumericInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
-        if (value === '' || /^[0-9]*$/.test(value)) {
-            setter(value);
-            setShowResult(false);
-        }
+        const sanitizedValue = value.replace(/[^0-9]/g, '');
+        setter(sanitizedValue);
+        setShowResult(false);
     };
 
     const handleAgeInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
-        if (value === '' || /^[0-9, ]*$/.test(value)) {
-            setter(value);
-            setShowResult(false);
-        }
+        const sanitizedValue = value.replace(/[^0-9, ]/g, '');
+        setter(sanitizedValue);
+        setShowResult(false);
     };
 
     const memberCount = age.split(',').map(a => a.trim()).filter(a => a).length;
@@ -247,6 +245,7 @@ const App: React.FC = () => {
                             value={aportes}
                             onChange={handleNumericInputChange(setAportes)}
                             placeholder="Ej: 70000"
+                            type="tel"
                             maxLength={7}
                             inputMode="numeric"
                         />
@@ -275,7 +274,7 @@ const App: React.FC = () => {
                                 value={age}
                                 onChange={handleAgeInputChange(setAge)}
                                 placeholder="Ej: 35, 32, 5"
-                                inputMode="text"
+                                inputMode="decimal"
                             />
                         </div>
                         
