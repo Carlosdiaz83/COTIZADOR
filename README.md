@@ -1,20 +1,63 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# COTIZADOR — App de escritorio con Electron
 
-# Run and deploy your AI Studio app
+## Instalación y ejecución en Windows, Mac y Linux
 
-This contains everything you need to run your app locally.
+### Requisitos previos
 
-View your app in AI Studio: https://ai.studio/apps/drive/1OYy6_f5qZ4aZ2Y-F0oPqMKgNo6qFCspT
+- [Node.js y npm](https://nodejs.org/) instalados.
+- **(Windows)** Se recomienda instalar [Git Bash](https://gitforwindows.org/) para usar la terminal si usas Windows.
 
-## Run Locally
+### Instalación
 
-**Prerequisites:**  Node.js
+1. Clona el repositorio:
+   ```sh
+   git clone https://github.com/Carlosdiaz83/COTIZADOR.git
+   cd COTIZADOR
+   ```
 
+2. Instala las dependencias:
+   ```sh
+   npm install
+   ```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+3. Ejecuta la aplicación de escritorio:
+   ```sh
+   npm run electron
+   ```
+
+Esto abrirá una ventana con la app COTIZADOR.
+
+---
+
+## Ejecución en Android (opcional, solo para usuarios avanzados)
+
+Puedes ejecutar la app en Android usando Termux + VNC, siguiendo estos pasos:
+
+1. Instala Termux desde F-Droid.
+2. Instala Node.js y Git en Termux:
+   ```sh
+   pkg install nodejs git
+   ```
+3. Clona el repositorio y sigue los pasos de instalación arriba.
+4. Instala y configura un servidor VNC para abrir ventanas gráficas (consulta tutoriales sobre Termux + VNC).
+5. Ejecuta `npm run electron` y accede por VNC.
+
+---
+
+## Estructura del proyecto
+
+- `electron-main.js` — Archivo principal de Electron.
+- `src/` — Código fuente React + TypeScript.
+- `package.json` — Configuración y dependencias.
+
+---
+
+## Publicar tu app
+
+Para crear un instalador (.exe, .dmg, .AppImage), consulta [Electron Forge](https://www.electronforge.io/) o [Electron Builder](https://www.electron.build/).
+
+---
+
+## Soporte
+
+Escríbeme por GitHub Issues si tienes problemas de instalación o ejecución.
